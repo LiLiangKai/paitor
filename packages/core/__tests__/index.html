@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #paitor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100vw;
+      height: 100vh;
+    }
+    .paitor-input {
+      padding: 20px;
+      line-height: 20px;
+      font-size: 14px;
+      color: #666;
+      border: 0;
+      outline: none;
+      resize: none;
+    }
+    .paitor-input:hover,
+    .paitor-input:active,
+    .paitor-input:focus {
+      outline: none;
+    }
+    .paitor-view {
+      padding: 20px;
+      border-left: 1px solid #ddd;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="paitor">
+    <textarea class="paitor-input"></textarea>
+    <div class="paitor-view"></div>
+  </div>
+  <script src="../dist/index.js"></script>
+  <script>
+    const input = document.querySelector('.paitor-input')
+    const view = document.querySelector('.paitor-view')
+    const paitor = new Paitor()
+    
+    input.addEventListener('input', debounce((e) => {
+      const html = paitor.render(e.target.value)
+      view.innerHTML = html
+    }, 500))
+
+
+    function debounce(fn, delay = 100) {
+      let timer
+      return (...args) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          fn(...args)
+        }, delay)
+      }
+    }
+
+    
+  </script>
+</body>
+</html>
