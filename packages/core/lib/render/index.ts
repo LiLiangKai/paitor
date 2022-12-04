@@ -1,7 +1,17 @@
+import { RULE_BLOCKQUOTE_BLOCK, RULE_BLOCKQUOTE_CONTENT } from '../rules/block/ruleName'
 import { escapeHtml } from '../utils'
 import type { IToken } from '../type'
 
 const defaultRuleRender = {
+  'blockquote_content': (token: IToken) => {
+    const { tag, content } = token
+    return `<${tag}>${content.join('\n')}</${tag}>`
+  },
+  'blockquote_block': (token: IToken, renderer: Renderer) => {
+    const { tag, children } = token
+    const content = renderer.render(children)
+    return `<${tag}>${content}</${tag}>`
+  },
   'code_block': (token: IToken) => {
     return `<pre><code>${escapeHtml(token.content.join('\n'))}</code></pre>\n`
   },
@@ -42,7 +52,6 @@ class Renderer {
   }
 
   render(tokens: IToken[]) {
-    console.time('render')
     let result = ''
     for(let i=0; i<tokens.length; i++) {
       const token = tokens[i]
@@ -50,7 +59,6 @@ class Renderer {
         result += this.rules[token.type](token, this)
       }
     }
-    console.timeEnd('render')
     return result
   }
 }

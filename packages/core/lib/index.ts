@@ -18,8 +18,10 @@ class Paitor {
     if(!src) {
       throw new Error('Parse content is empty!')
     }
+    console.time('parse')
     const state = new State(src)
     state.process(this)
+    console.timeEnd('parse')
     console.log(state)
     return state.tokens
   }

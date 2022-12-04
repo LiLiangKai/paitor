@@ -46,7 +46,6 @@ class Rule {
     if(!this.cache) {
       this.setCache()
     }
-    console.log(this.cache)
     // @ts-ignore
     return this.cache[chainName] as TRuleFn[]
   }

@@ -30,3 +30,7 @@ export function normalize(str: string) {
   // 处理换行符，统一为\n
   return str.replace(NEW_LINES_RE, '\n')
 } 
+
+export function trim(str: string) {
+  return str.trim()
+}

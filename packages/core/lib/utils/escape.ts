@@ -12,8 +12,6 @@ export function escapeHtml(str: string) {
   return str.replace(HTML_ESCAPE_REPLACE_REG, (char) => HTML_REPLACE_CHARS[char])
 }
 
-// const ESCAPED = ESCAPED_CHARS.split('').reduce((map) => {}, {})
-
 export function escape(str) {
   console.log(str)
 }

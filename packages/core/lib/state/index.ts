@@ -60,8 +60,15 @@ class State {
     // paitor.inline.parse(this)
   }
 
-  pushToken(token: Token) {
-    this.tokens.push(token)
+  pushToken(token: Token, parent?: Token) {
+    if(!parent) {
+      this.tokens.push(token)
+    } else {
+      if(!parent.children) {
+        parent.children = []
+      }
+      parent.children.push(token)
+    }
   }
 
   pushReferenceToken(token: Token) {

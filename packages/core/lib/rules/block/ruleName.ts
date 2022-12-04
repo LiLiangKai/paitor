@@ -1,4 +1,6 @@
 export const RULE_BLOCKQUOTE = 'blockquote'
+export const RULE_BLOCKQUOTE_CONTENT = 'blockquote_content'
+export const RULE_BLOCKQUOTE_BLOCK = 'blockquote_block'
 export const RULE_CODE = 'code_block'
 export const RULE_FENCE = 'fence'
 export const RULE_HEADING = 'heading'
