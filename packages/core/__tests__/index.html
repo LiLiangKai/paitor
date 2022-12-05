@@ -50,7 +50,9 @@
     const paitor = new Paitor()
     
     input.addEventListener('input', debounce((e) => {
+      console.time( 'render' )
       const html = paitor.render(e.target.value)
+      console.timeEnd( 'render' )
       view.innerHTML = html
     }, 500))
 

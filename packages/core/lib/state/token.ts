@@ -22,7 +22,7 @@ export interface IToken {
   /**
    * 内容
    */
-  content: string[]
+  content: (string | string[])[]
   /**
    * 包含的行起始和行结束
    */
@@ -30,6 +30,16 @@ export interface IToken {
   /** 对应的源文本内容 */
   src: string
 
+  /* inline token props */
+  /** 文本已处理位置 */
+  pos: number
+  /** 文本边界范围 */
+  range: [number, number]
+  /** 文本长度 */
+  length: number
+
+
+  /* reference token props */
   /** 链接定义的文本内容 */
   label?: string
   /** 链接定义的链接地址 */
@@ -48,7 +58,11 @@ class Token implements IToken {
   content: string[]
   lines: [number, number]
   src: string
-  
+
+  pos: number
+  range: [number, number]
+  length: number
+
   label?: string | undefined
   url?: string | undefined
   title?: string | undefined

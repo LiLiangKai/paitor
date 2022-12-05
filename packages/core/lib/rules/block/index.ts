@@ -6,12 +6,12 @@ import Hr from './hr'
 import Paragraph from "./paragraph"
 import Reference from './reference'
 import SetextHeading from './setextHeading'
-import type { TRuleFn } from '../../type'
+import type { TBlockRuleFn } from '../../type'
 
-const blockRules: TRuleFn[] = [
-  Blockquote,
+const blockRules: TBlockRuleFn[] = [
   Code,
   Fence,
+  Blockquote,
   Hr,
   Reference,
   Heading,

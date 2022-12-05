@@ -56,8 +56,8 @@ class State {
 
   process(paitor: Paitor) {
     paitor.block.parse(this, paitor)
+    paitor.inline.parse(this, paitor)
     return this.tokens
-    // paitor.inline.parse(this)
   }
 
   pushToken(token: Token, parent?: Token) {
