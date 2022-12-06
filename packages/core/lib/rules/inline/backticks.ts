@@ -1,16 +1,15 @@
-import Text from './text'
-import { pushContent, pushTypeContent } from './utils'
+import { TypeTagMap } from './utils'
 import { RULE_INLINE_BACKTICK } from './ruleName'
-import type { IToken, State, Paitor } from '../../type'
+import type { InlineToken, State, Paitor } from '../../type'
 
 /**
  * 反勾字符串是一对或多对反勾字符(')组成的字符串，前后不带反勾
- * @param {IToken} token 
+ * @param {InlineToken} token 
  * @param {State} state 
  * @param {Paitor} paitor
  */
-function rule(token: IToken, state: State, paitor: Paitor) {
-  const { src, length, content } = token
+function rule(token: InlineToken, state: State, paitor: Paitor) {
+  const { src, length } = token
   const start = token.pos
   if(start >= length) return true
   
@@ -19,42 +18,43 @@ function rule(token: IToken, state: State, paitor: Paitor) {
 
   let pos = start+1
   let startMarkCount = 1
-  let endMarkCount = 0
   // 其实起始标记`字符的数量
   while(pos < length && src.charCodeAt(pos) === 0x60) {
     startMarkCount++
     pos++
   }
-  // 跳过非`字符
-  while(pos < length && src.charCodeAt(pos) !== 0x60) {
-    pos++
+  const startMark = src.slice(start, pos)
+  let endMarkPos = -1
+  // 寻找闭合标记
+  if ((endMarkPos = src.indexOf(startMark, pos)) === -1) {
+    // 未找到，即当前的标记没有配对的闭合标记，则将标记内容作为普通文本显示
+    token.pushContent(startMark)
+    token.pos = pos
+    return true
   }
-
-  // 其实结束标记`字符的数量
-  while (pos < length && src.charCodeAt(pos) === 0x60) {
-    endMarkCount++
-    pos++
-  }
-
-  if(pos >= length || endMarkCount!==startMarkCount) {
-    let nextPos = start + startMarkCount
-    let text = src.slice(start, nextPos)
-    if(endMarkCount > 0) {
-      text = src.slice(start, pos-1)
-      nextPos = pos
+  
+  let noCloseMark = false
+  let curPos = endMarkPos + startMarkCount
+  while(curPos < length && src.charCodeAt(curPos) === 0x60) {
+    endMarkPos = src.indexOf(startMark, curPos)
+    if(endMarkPos === -1) {
+      noCloseMark = true
+      break
     }
-    // 未找到结束`字符
-    pushContent(content, text)
-    token.pos = nextPos
-    return Text(token, state, paitor)
+    curPos = endMarkPos + startMarkCount
   }
 
-  pushTypeContent(
-    content,
-    src.slice(start+startMarkCount, pos-endMarkCount),
-    rule.ruleName,
+  if(noCloseMark) {
+    token.pushContent(startMark)
+    token.pos = pos
+    return true
+  }
+
+  token.pushTypeContent(
+    TypeTagMap[rule.ruleName], 
+    src.slice(pos, endMarkPos)
   )
-  token.pos = pos
+  token.pos = endMarkPos + startMarkCount
 
   return true
 }

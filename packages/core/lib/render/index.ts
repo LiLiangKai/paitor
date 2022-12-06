@@ -1,4 +1,5 @@
 import { RULE_BLOCKQUOTE_BLOCK, RULE_BLOCKQUOTE_CONTENT } from '../rules/block/ruleName'
+import { RULE_INLINE } from '../rules/inline/ruleName'
 import { escapeHtml } from '../utils'
 import type { IToken } from '../type'
 
@@ -29,8 +30,10 @@ const defaultRuleRender = {
   'hr': (token: IToken) => {
     return `<${token.tag}>\n`
   },
-  'paragraph': (token: IToken) => {
-    return `<p>${token.content.join('\n')}</p>\n`
+  'paragraph': (token: IToken, renderer: Renderer) => {
+    const { children = [] } = token
+    const content = children.length > 0 ? renderer.render(children) : token.content.join('\n')
+    return `<p>${content}</p>\n`
   }
 }
 
@@ -51,11 +54,35 @@ class Renderer {
     return result
   }
 
+  renderInline(token: IToken) {
+    const { content } = token
+    let result = ''
+    const markStack: string[] = []
+    for(let i=0; i<content.length; i++) {
+      const str = content[i]
+      if(Array.isArray(str)) {
+        result += str.join('')
+      } else {  
+        if(markStack[markStack.length-1] === str) {
+          result += `</${str}>`
+          markStack.pop()
+        } else {
+          result += `<${str}>`
+          markStack.push(str)
+        }
+      }
+    }
+    return result
+  }
+
   render(tokens: IToken[]) {
     let result = ''
     for(let i=0; i<tokens.length; i++) {
       const token = tokens[i]
-      if(this.rules[token.type]) {
+      if(token.type === RULE_INLINE) {
+        result += this.renderInline(token)
+      }
+      else if(this.rules[token.type]) {
         result += this.rules[token.type](token, this)
       }
     }
