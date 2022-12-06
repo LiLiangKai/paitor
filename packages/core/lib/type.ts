@@ -1,7 +1,7 @@
 import type Paitor from './index'
 import type State from './state'
 import type { TLineMetas, TLineMeta } from './state'
-import type { IToken } from './state/token'
+import type { IToken, InlineToken } from './state/token'
 
 export type TRuleFn<F = Function> = F & {
   ruleName: string
@@ -17,5 +17,6 @@ export type {
   State,
   IToken,
   TLineMeta,
-  TLineMetas
+  TLineMetas,
+  InlineToken
 }
