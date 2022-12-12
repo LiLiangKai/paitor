@@ -7,7 +7,11 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import babel from 'rollup-plugin-babel'
+import postcss from 'rollup-plugin-postcss'
+import autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
 // import { terser } from 'rollup-plugin-terser'
+
 const ROOT = join(__dirname, '..')
 
 function rollupDel (pkg) {
@@ -29,6 +33,7 @@ const version = pkg.version
 const banner =
     `/*!
  * ${libName} v${version}
+ * @licence MIT
  * Copyright© ${new Date().getFullYear()} Hiya
  */
 `
@@ -62,6 +67,15 @@ export default {
       'process.env.ENV': JSON.stringify(process.env.ENV || 'pro'),
       'process.env.PKG_VERSION': version
     }),
+    postcss( {
+      extract: join( CWD, 'dist/index.css' ),
+      use: {
+        less: { javascriptEnabled: true }
+      },
+      plugins: [ autoprefixer, cssnano() ],
+      extensions: [ '.less' ],
+      writeDefinitions: true,
+    } ),
     commonjs({
       include: 'node_modules/**'
     }),
@@ -85,7 +99,9 @@ export default {
       typescript: require('typescript')
     }),
     babel({
-      babelrc: join(ROOT, '.babelrc.js')
+      runtimeHelpers: true,
+      // babelrc: join(ROOT, '.babelrc.js'),
+      configFile: join( ROOT, '.babelrc.js' ),
     }),
     sizeSnapshot(),
   ],

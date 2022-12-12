@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #app {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+  <link rel="stylesheet" href="../dist/index.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="../dist/index.js"></script>
+<script>
+  var paitor = new Paitor({
+    container: document.getElementById('app')
+  })
+  paitor.init()
+
+  // async function sleep() {
+  //   return new Promise(resolve => {
+  //     setTimeout( () => {
+  //       resolve()
+  //     }, 1000 )
+  //   })
+  // }
+  // async function main() {
+  //   for (let i=0; i<10; i++) {
+  //     paitor.init()
+  //     await sleep()
+  //     paitor.destory()
+  //   }
+  // }
+</script>
+</body>
+</html>
