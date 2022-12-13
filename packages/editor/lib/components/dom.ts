@@ -1,4 +1,4 @@
-import { debounce } from './base'
+import { debounce } from '../utils'
 
 interface IDOMChildren {
   tag: string
@@ -37,7 +37,6 @@ class DOM {
   }
 
   static updateClassName<E extends HTMLElement = HTMLElement>(element: E) {
-    element.classList.contains
     return {
       add(...classNames: string[]) {
         element.classList.add(...classNames)

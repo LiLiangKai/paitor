@@ -1,6 +1,6 @@
 import Block from './block'
 import { HEADER_BLOCK_ID, TAIL_BLOCK_ID } from '../constants'
-import type { TPCore, TBlockMeta, TBlockMetaData } from '../types'
+import type { TCore, TBlockMeta, TBlockMetaData } from '../types'
 
 export default class State {
 
@@ -8,9 +8,9 @@ export default class State {
   private blockTail: Block
   private blockSize: number
   private blockMap: Map<string, Block>
-  blockFocus: Block
-
-  constructor(core: TPCore) {
+  blockFocusId: string
+  
+  constructor(core: TCore) {
 
     this.blockMap = new Map()
     this.blockSize = 0
@@ -27,6 +27,10 @@ export default class State {
     this.blockHeader.insertAfter(this.blockTail)
   }
 
+  get blockFocus() {
+    return this.getBlock(this.blockFocusId)
+  }
+
   createBlock<D = TBlockMetaData>(meta: TBlockMeta<D>, prevBlockId?: string) {
     const block = new Block<D>(meta)
     const prevBlock = this.blockMap.get(prevBlockId || '')
@@ -37,7 +41,7 @@ export default class State {
     }
     this.blockSize++
     this.blockMap.set(block.id, block)
-    this.blockFocus = block
+    this.blockFocusId = block.id
     return block
   }
 
@@ -51,7 +55,7 @@ export default class State {
     if (nextFocusBlock === this.blockTail) {
       nextFocusBlock = block.prevSibling
     }
-    this.blockFocus = nextFocusBlock
+    this.blockFocusId = nextFocusBlock.id
 
     block.unlink()
     this.blockMap.delete(id)
@@ -78,6 +82,5 @@ export default class State {
     this.blockSize = 0
     this.blockHeader = null as any
     this.blockTail = null as any
-    this.blockFocus = null as any
   }
 }

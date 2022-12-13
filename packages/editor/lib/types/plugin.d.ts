@@ -1,10 +1,16 @@
-import { TPBlock } from './block'
+import { TPBlock, TBlockMetaData } from './block'
 import { TPCore } from './core'
 
-export class IEditorPlugin {
-  input: HTMLElement
+export interface IEditorPluginApi<D = TBlockMetaData> {
+  readonly block: TPBlock<D>
+  readonly core: TPCore
+}
 
-  constructor(block: TPBlock, core: TPCore)
+export class IEditorPlugin<E extends HTMLElement = HTMLElement, D = TBlockMetaData> {
+  readonly paitor: IEditorPluginApi<D>
+  input: E
+
+  constructor(instance: IEditorPlugin<E, D>)
   validData(): void
   mount(): void
   unmount(): void

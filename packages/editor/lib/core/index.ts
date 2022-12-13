@@ -1,8 +1,7 @@
 import State from './state'
 import Renderer from './renderer'
 import Plugin from './plugin'
-import { proxyObject } from '../utils'
-import type { TCoreOption, TPCore } from '../types'
+import type { TCoreOption } from '../types'
 
 export default class Core {
   readonly option: TCoreOption
@@ -12,13 +11,11 @@ export default class Core {
 
   constructor(option: TCoreOption) {
     this.option = option
-    const core = proxyCore(this)
     
     this.plugin = new Plugin(option.plugins)
-    this.state = new State(core)
-    this.renderer = new Renderer(core)
+    this.state = new State(this)
+    this.renderer = new Renderer(this)
 
-    this.createBlock()
     this.createBlock()
   }
 
@@ -38,7 +35,8 @@ export default class Core {
   }
 
   createBlock() {
-    this.renderer.mountBlock(this.state.createBlock({type: 'paragraph'}))
+    const block = this.state.createBlock({ type: 'paragraph' })
+    this.renderer.mountBlock(block)
   }
 
   deleteBlock(id: string) {
@@ -50,13 +48,13 @@ export default class Core {
 
   focusBlock(id: string) {
     const block = this.state.getBlock(id)
-    const curFocusBlock = this.state.blockFocus
-    if(!block || block === curFocusBlock) return
-    if(curFocusBlock) {
-      this.renderer.blurBlock(curFocusBlock)
+    const blockFocusId = this.state.blockFocusId
+    if(!block || id === blockFocusId) return
+    if(blockFocusId) {
+      this.renderer.blurBlock(this.state.blockFocus)
     }
-    this.state.blockFocus = block
-    this.renderer.focusBlock(block)
+    this.state.blockFocusId = block.id
+    this.renderer.focusBlock(this.state.blockFocus)
   }
 
   getPlugin(type: string) {
@@ -74,16 +72,4 @@ export default class Core {
     this.state = null as any
     this.renderer = null as any
   }
-}
-
-const canVisitFields = [
-  'editable', 
-  'container', 
-  'createBlock', 
-  'deleteBlock',
-  'focusBlock',
-  'getPlugin',
-]
-function proxyCore(core: Core): TPCore {
-  return proxyObject(core, {}, canVisitFields)
 }

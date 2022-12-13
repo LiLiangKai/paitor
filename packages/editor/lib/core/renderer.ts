@@ -1,16 +1,16 @@
-import $ from '../utils/dom'
+import $ from '../components/dom'
 import { prefixCls } from '../constants'
-import { proxyBlock } from './block'
-import { TPCore, TBlock, IEditorPlugin } from '../types'
+import BlockView from './block-view'
+import { TCore, TBlock } from '../types'
 
 export default class Renderer {
-  private core: TPCore
-  private blockMap: WeakMap<TBlock, IEditorPlugin>
+  private core: TCore
+  private blockMap: WeakMap<TBlock, BlockView>
 
   root: HTMLDivElement
   contentWrap: HTMLDivElement
 
-  constructor(core: TPCore) {
+  constructor(core: TCore) {
     this.core = core
     this.blockMap = new WeakMap()
     this.root = $.create('div', { class: prefixCls })
@@ -20,34 +20,32 @@ export default class Renderer {
 
   mountBlock(block: TBlock) {
     if(this.blockMap.has(block)) return
-    const plugin = this.core.getPlugin(block.type)
-    if(!plugin) {
-      throw new Error(`Not found ${block.type} plugin`)
-    }
+    const view = new BlockView(block, this.core)
     this.contentWrap.appendChild(block.element)
-    const instance = new plugin(proxyBlock(block), this.core)
-    instance.mount()
-    this.blockMap.set(block, instance)
+    view.mount()
+    this.blockMap.set(block, view)
   }
 
   unmountBlock(block: TBlock) {
-    const instance = this.blockMap.get(block)
-    if (!instance) return
+    const view = this.blockMap.get(block)
+    if (!view) return
     this.blockMap.delete(block)
-    instance.unmount()
+    view.unmount()
   }
 
-  focusBlock(block: TBlock) {
-    const instance = this.blockMap.get(block)
-    if(instance) {
-      instance.focus()
+  focusBlock(block?: TBlock) {
+    if(!block) return
+    const view = this.blockMap.get(block)
+    if(view) {
+      view.focus()
     }
   }
 
-  blurBlock(block: TBlock) {
-    const instance = this.blockMap.get(block)
-    if (instance) {
-      instance.blur()
+  blurBlock(block?: TBlock) {
+    if(!block) return
+    const view = this.blockMap.get(block)
+    if (view) {
+      view.blur()
     }
   }
 

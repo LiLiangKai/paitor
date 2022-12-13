@@ -27,4 +27,5 @@ export {
 export { 
   IEditorPlugin,
   TEditorPluginClass,
+  IEditorPluginApi,
 } from './plugin'
