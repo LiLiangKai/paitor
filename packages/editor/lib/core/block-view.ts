@@ -8,6 +8,8 @@ export default class BlockView {
   block: TBlock
   core: TCore
 
+  private destoryCallback
+
   constructor(block: TBlock, core: TCore) {
     const plugin = core.getPlugin(block.type)
     if(!plugin) {
@@ -43,11 +45,28 @@ export default class BlockView {
     if(!instance.input) {
       throw new Error(`${this.block.type} plugin uninitialized input element`)
     }
-    this.block.element.appendChild(instance.input)
+    const element = this.block.element
+    const destoryMouseenter = $.addEventListener(element, 'mouseenter', this.handleMouseenter.bind(this))
+    const destoryMouseLeave = $.addEventListener(element, 'mouseleave', this.handleMouseleave.bind(this))
+    $.append(element, instance.input)
     instance.mount()
+
+    this.destoryCallback = () => {
+      destoryMouseenter()
+      destoryMouseLeave()
+    }
   }
 
   unmount() {
+    this.destoryCallback?.()
     this.instance.unmount()
+  }
+
+  handleMouseenter() {
+    $.updateClassName(this.block.element).add(`${prefixCls}-block-hover`)
+  }
+
+  handleMouseleave() {
+    $.updateClassName(this.block.element).remove(`${prefixCls}-block-hover`)
   }
 }

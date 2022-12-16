@@ -1,4 +1,4 @@
-import PluginBase from '../core/helper/plugin-tool'
+import PluginBase from '../core/helper/plugin-base'
 import $ from '../components/dom'
 import { prefixCls } from '../constants'
 import { IEditorPluginApi, IEditorPlugin } from '../types'

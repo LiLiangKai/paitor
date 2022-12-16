@@ -1,3 +1,4 @@
+import $ from '../components/dom'
 import State from './state'
 import Renderer from './renderer'
 import Plugin from './plugin'
@@ -27,9 +28,13 @@ export default class Core {
     return this.option.container
   }
 
+  get blockSize() {
+    return this.state.blockSize
+  }
+
   render() {
     if(!this.container.contains(this.renderer.root)) {
-      this.container.appendChild(this.renderer.root)
+      $.append(this.container, this.renderer.root)
     }
     this.renderer.focusBlock(this.state.blockFocus)
   }

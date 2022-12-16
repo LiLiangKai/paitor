@@ -15,7 +15,7 @@ export default class Renderer {
     this.blockMap = new WeakMap()
     this.root = $.create('div', { class: prefixCls })
     this.contentWrap = $.create('div', { class: `${prefixCls}-content` })
-    this.root.appendChild(this.contentWrap)
+    $.append(this.root, this.contentWrap)
   }
 
   mountBlock(block: TBlock) {

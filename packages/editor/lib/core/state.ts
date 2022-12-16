@@ -6,8 +6,8 @@ export default class State {
 
   private blockHeader: Block
   private blockTail: Block
-  private blockSize: number
   private blockMap: Map<string, Block>
+  blockSize: number
   blockFocusId: string
   
   constructor(core: TCore) {

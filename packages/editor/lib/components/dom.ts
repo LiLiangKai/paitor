@@ -54,6 +54,10 @@ class DOM {
     return (parentDom || document).querySelector<E>(selector)
   }
 
+  static append<P extends HTMLElement = HTMLDivElement, E extends HTMLElement = HTMLDivElement>(parent: P, child: E){ 
+    parent.appendChild(child)
+  }
+
   static addEventListener(
     dom: HTMLElement, 
     event: string, 

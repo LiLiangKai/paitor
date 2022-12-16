@@ -9,6 +9,7 @@ export function proxyBlock(block: TBlock): TPBlock {
 const coreCanVisitFields = [
   'editable',
   'container',
+  'blockSize',
   'createBlock',
   'deleteBlock',
   'focusBlock',
