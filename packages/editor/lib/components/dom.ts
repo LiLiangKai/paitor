@@ -74,11 +74,6 @@ class DOM {
       dom.removeEventListener(event, eventHandle, false)
     }
   }
-
-  static keyCodeMap = {
-    13: 'enter',
-    12: 'space'
-  }
 }
 
 export default DOM

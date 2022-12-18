@@ -1,6 +1,6 @@
 import $ from '../components/dom'
 import { prefixCls } from '../constants'
-import { proxyBlock, proxyCore } from './helper/proxy'
+import { paitorApi } from './helper/api'
 import { TCore, TBlock, IEditorPlugin } from '../types'
 
 export default class BlockView {
@@ -9,34 +9,34 @@ export default class BlockView {
   core: TCore
 
   private destoryCallback
+  private inputWrap: HTMLDivElement
 
   constructor(block: TBlock, core: TCore) {
     const plugin = core.getPlugin(block.type)
     if(!plugin) {
       throw new Error(`Not found ${block.type} plugin`)
     }
+    this.inputWrap = $.create('div', {class: `${prefixCls}-block-content`})
+    $.append(block.element, this.inputWrap)
+    
     this.block = block
     this.core = core
-  
     this.instance = Object.create(plugin.prototype)
     // @ts-ignore
-    this.instance.paitor = {
-      block: proxyBlock(block),
-      core: proxyCore(core),
-    }
+    this.instance.paitor = paitorApi(block, core)
     this.instance = new plugin(this.instance)
   }
 
   focus() {
     if(!this.instance) return
     this.instance.focus()
-    $.updateClassName(this.instance.input).add(`${prefixCls}-active`)
+    $.updateClassName(this.block.element).add(`${prefixCls}-block-active`)
   }
 
   blur() {
     if(!this.instance) return
     this.instance.blur()
-    $.updateClassName(this.instance.input).remove(`${prefixCls}-active`)
+    $.updateClassName(this.block.element).remove(`${prefixCls}-block-active`)
   }
 
   mount() {
@@ -46,12 +46,16 @@ export default class BlockView {
       throw new Error(`${this.block.type} plugin uninitialized input element`)
     }
     const element = this.block.element
-    const destoryMouseenter = $.addEventListener(element, 'mouseenter', this.handleMouseenter.bind(this))
-    const destoryMouseLeave = $.addEventListener(element, 'mouseleave', this.handleMouseleave.bind(this))
-    $.append(element, instance.input)
+
+    const destoryClick = $.addEventListener(element, 'click', this.handleMouseClick.bind(this))
+    const destoryMouseenter = $.addEventListener(element, 'mouseenter', this.handleMouseEnter.bind(this))
+    const destoryMouseLeave = $.addEventListener(element, 'mouseleave', this.handleMouseLeave.bind(this))
+
+    $.append(this.inputWrap, instance.input)
     instance.mount()
 
     this.destoryCallback = () => {
+      destoryClick()
       destoryMouseenter()
       destoryMouseLeave()
     }
@@ -60,13 +64,21 @@ export default class BlockView {
   unmount() {
     this.destoryCallback?.()
     this.instance.unmount()
+    this.block.element.remove()
+    this.block = null as any
+    this.core = null as any
+    this.instance = null as any
   }
 
-  handleMouseenter() {
+  handleMouseClick() {
+    this.core.focusBlock(this.block.id)
+  }
+
+  handleMouseEnter() {
     $.updateClassName(this.block.element).add(`${prefixCls}-block-hover`)
   }
 
-  handleMouseleave() {
+  handleMouseLeave() {
     $.updateClassName(this.block.element).remove(`${prefixCls}-block-hover`)
   }
 }

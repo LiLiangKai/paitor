@@ -17,7 +17,7 @@ export default class Core {
     this.state = new State(this)
     this.renderer = new Renderer(this)
 
-    this.createBlock()
+    this.createBlock(false)
   }
 
   get editable() {
@@ -39,12 +39,20 @@ export default class Core {
     this.renderer.focusBlock(this.state.blockFocus)
   }
 
-  createBlock() {
+  createBlock(autoFocus: boolean = true) {
+    const curFocusBlock = this.state.blockFocus
     const block = this.state.createBlock({ type: 'paragraph' })
     this.renderer.mountBlock(block)
+    if(autoFocus) {
+      if(curFocusBlock) {
+        this.renderer.blurBlock(curFocusBlock)
+      }
+      this.renderer.focusBlock(block)
+    }
   }
 
   deleteBlock(id: string) {
+    if(this.blockSize <= 1) return
     const block = this.state.getBlock(id)
     if(!block) return
     this.renderer.unmountBlock(block)

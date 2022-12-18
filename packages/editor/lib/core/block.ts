@@ -74,8 +74,4 @@ export default class Block<D = TBlockMetaData> {
     this.nextSibling = null as any
     this.prevSibling = null as any
   }
-
-  destory(): void {
-
-  }
 }

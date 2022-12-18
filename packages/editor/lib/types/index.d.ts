@@ -13,19 +13,17 @@ export {
 
 export {
   TBlock,
-  TPBlock,
   TBlockMeta,
   TBlockMetaData,
 } from './block'
 
 export {  
   TCore,
-  TPCore,
   TCoreOption,
 } from './core'
 
 export { 
   IEditorPlugin,
   TEditorPluginClass,
-  IEditorPluginApi,
+  TPaitorInjectApi,
 } from './plugin'

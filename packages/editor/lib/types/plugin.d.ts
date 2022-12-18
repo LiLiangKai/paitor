@@ -1,13 +1,10 @@
-import { TPBlock, TBlockMetaData } from './block'
-import { TPCore } from './core'
+import { TBlockMetaData } from './block'
+import { TPaitorInjectApi } from '../core/helper/api'
 
-export interface IEditorPluginApi<D = TBlockMetaData> {
-  readonly block: TPBlock<D>
-  readonly core: TPCore
-}
+export { TPaitorInjectApi }
 
 export class IEditorPlugin<E extends HTMLElement = HTMLElement, D = TBlockMetaData> {
-  readonly paitor: IEditorPluginApi<D>
+  readonly paitor: TPaitorInjectApi
   input: E
 
   constructor(instance: IEditorPlugin<E, D>)
@@ -16,6 +13,7 @@ export class IEditorPlugin<E extends HTMLElement = HTMLElement, D = TBlockMetaDa
   unmount(): void
   focus(): void
   blur(): void
+  empty(): boolean
   static type: string
 }
 

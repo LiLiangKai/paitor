@@ -6,5 +6,5 @@ export type TBlockMeta<T = TBlockMetaData> = {
   type: string
   data?: T
 }
-export type TPBlock<D = TBlockMetaData> = Pick<TBlock<D>, 'after'|'before'|'id'|'type'|'data'|'element'|'change'>
+
 export { TBlock }

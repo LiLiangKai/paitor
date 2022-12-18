@@ -31,6 +31,7 @@ export default class Renderer {
     if (!view) return
     this.blockMap.delete(block)
     view.unmount()
+    block = null as any
   }
 
   focusBlock(block?: TBlock) {
