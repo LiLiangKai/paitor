@@ -12,6 +12,14 @@ export function debounce(fn, delay = 100) {
   }
 }
 
+export function delay(callback: (...args: any[]) => any, timeout = 0) {
+  return (...args: any[]) => {
+    setTimeout(() => {
+      callback(...args)
+    }, timeout)
+  }
+}
+
 export function proxyObject<T extends object = any, O = T>(target: T, handler: any, canVisitFields?: string[]): T {
   return new Proxy(target, {
     set(...arg) {

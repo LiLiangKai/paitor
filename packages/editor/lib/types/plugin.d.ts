@@ -11,9 +11,9 @@ export class IEditorPlugin<E extends HTMLElement = HTMLElement, D = TBlockMetaDa
   validData(): void
   mount(): void
   unmount(): void
-  focus(): void
-  blur(): void
-  empty(): boolean
+  // focus(): void
+  // blur(): void
+  // empty(): boolean
   static type: string
 }
 

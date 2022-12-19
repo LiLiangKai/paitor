@@ -57,6 +57,7 @@ export default class Core {
     if(!block) return
     this.renderer.unmountBlock(block)
     this.state.deleteBlock(id)
+    this.renderer.focusBlock(this.state.blockFocus)
   }
 
   focusBlock(id: string) {

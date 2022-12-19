@@ -14,3 +14,29 @@ export const KEY_CODES = {
   space: 32,
   delete: 46,
 }
+
+export const DOM_CONST = {
+  nativeInputs: [
+    'INPUT',
+    'TEXTAREA',
+  ],
+  lineBreakTags: ['BR', 'WBR'],
+  singleTags: [
+    'AREA',
+    'BASE',
+    'BR',
+    'COL',
+    'COMMAND',
+    'EMBED',
+    'HR',
+    'IMG',
+    'INPUT',
+    'KEYGEN',
+    'LINK',
+    'META',
+    'PARAM',
+    'SOURCE',
+    'TRACK',
+    'WBR',
+  ]
+}

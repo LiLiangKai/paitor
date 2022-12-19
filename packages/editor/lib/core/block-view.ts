@@ -1,6 +1,8 @@
-import $ from '../components/dom'
-import { prefixCls } from '../constants'
 import { paitorApi } from './helper/api'
+import $ from '../components/dom'
+import SelectionTool from '../components/selection'
+import { prefixCls } from '../constants'
+import { delay } from '../utils'
 import { TCore, TBlock, IEditorPlugin } from '../types'
 
 export default class BlockView {
@@ -29,13 +31,17 @@ export default class BlockView {
 
   focus() {
     if(!this.instance) return
-    this.instance.focus()
+    const node = $.getDeepestNode(this.instance.input)
+    const contentLength = $.getContentLength(node)
+    delay(() => {
+      console.log(this, contentLength)
+      SelectionTool.setCursor(node, contentLength)
+    }, 10)()
     $.updateClassName(this.block.element).add(`${prefixCls}-block-active`)
   }
 
   blur() {
     if(!this.instance) return
-    this.instance.blur()
     $.updateClassName(this.block.element).remove(`${prefixCls}-block-active`)
   }
 

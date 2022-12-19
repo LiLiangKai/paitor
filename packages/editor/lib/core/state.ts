@@ -50,7 +50,7 @@ export default class State {
     if(!this.blockMap.has(id)) return
     let block = this.blockMap.get(id) as Block
 
-    // 转转blockFoucs对象
+    // 切换blockFoucs对象
     let nextFocusBlock = block.nextSibling
     if (nextFocusBlock === this.blockTail) {
       nextFocusBlock = block.prevSibling

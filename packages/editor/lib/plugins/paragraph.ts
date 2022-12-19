@@ -32,7 +32,7 @@ export default class Paragraph extends PluginBase implements IEditorPlugin<HTMLD
       switch(e.keyCode) {
         case KEY_CODES.backspace:
           console.log('backspace', this.paitor.current.data.text)
-          if(this.empty()) {
+          if($.isEmptyNode(this.input)) {
             this.paitor.deleteBlock(this.paitor.current.id)
           }
           this
@@ -58,18 +58,6 @@ export default class Paragraph extends PluginBase implements IEditorPlugin<HTMLD
 
   unmount(): void {
     this.destory?.()
-  }
-
-  focus(): void {
-    this.input.focus()
-  }
-
-  blur(): void {
-    this.input.blur()
-  }
-
-  empty(): boolean {
-    return !this.paitor.current.data.text
   }
 
   static type = 'paragraph'

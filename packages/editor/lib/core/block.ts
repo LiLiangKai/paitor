@@ -42,7 +42,7 @@ export default class Block<D = TBlockMetaData> {
   }
 
   /** insert other block before this block */
-  insertBefore<D = TBlockMetaData>(block: Block<D>) {
+  insertBefore(block: Block) {
     if (this.prevSibling) {
       this.prevSibling.nextSibling = block
     }
@@ -52,7 +52,7 @@ export default class Block<D = TBlockMetaData> {
   }
 
   /** insert other block after this block */
-  insertAfter<D = TBlockMetaData>(block: Block<D>) {
+  insertAfter(block: Block) {
     if (this.nextSibling) {
       this.nextSibling.prevSibling = block
     }
@@ -65,11 +65,12 @@ export default class Block<D = TBlockMetaData> {
     if (!this.prevSibling && !this.nextSibling) {
       throw new Error('Can not unlink block which no prevSibling and nextSibling')
     }
+    const { nextSibling, prevSibling } = this
     if (this.prevSibling) {
-      this.prevSibling.insertAfter(this.nextSibling)
+      this.prevSibling.nextSibling = nextSibling
     }
     if (this.nextSibling) {
-      this.nextSibling.insertBefore(this.prevSibling)
+      this.nextSibling.prevSibling = prevSibling
     }
     this.nextSibling = null as any
     this.prevSibling = null as any

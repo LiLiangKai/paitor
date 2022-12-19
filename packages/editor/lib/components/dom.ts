@@ -1,4 +1,5 @@
 import { debounce } from '../utils'
+import { DOM_CONST } from '../constants'
 
 interface IDOMChildren {
   tag: string
@@ -73,6 +74,72 @@ class DOM {
     return () => {
       dom.removeEventListener(event, eventHandle, false)
     }
+  }
+
+  static getDeepestNode(node: Node, atLast = true) {
+    if(!node) return node
+
+    const child = atLast ? 'lastChild' : 'firstChild'
+    const sibling = atLast ? 'previousSibling' : 'nextSibling'
+    
+    if(node.nodeType === Node.ELEMENT_NODE && node[child]) {
+      let nodeChild = node[child] as Node
+      if(
+        DOM.isSingleTag(nodeChild as HTMLElement) &&
+        !DOM.isNativeInput(nodeChild as HTMLElement) &&
+        !DOM.isLineBreakTag(nodeChild as HTMLElement)
+      ) {
+        if(nodeChild[sibling]) {
+          nodeChild = nodeChild[sibling] as Node
+        } else if(nodeChild.parentNode?.[sibling]) {
+          nodeChild = nodeChild.parentNode[sibling] as Node
+        } else {
+          return nodeChild.parentNode
+        }
+      }
+      return DOM.getDeepestNode(nodeChild, atLast)
+    }
+    return node
+  }
+
+  static getContentLength(node: Node) {
+    if(DOM.isNativeInput(node as HTMLElement)) {
+      return (node as HTMLInputElement).value.length
+    }
+    return node.textContent?.length || 0
+  }
+
+  static isNativeInput(element: HTMLElement) {
+    return element && element.tagName ? DOM_CONST.nativeInputs.includes(element.tagName) : false
+  }
+
+  static isLineBreakTag(element: HTMLElement) {
+    return element && DOM_CONST.lineBreakTags.includes(element.tagName)
+  }
+
+  static isSingleTag(element: HTMLElement) {
+    return element && DOM_CONST.singleTags.includes(element.tagName)
+  }
+
+  static isElement(node) {
+    if(!node || typeof node !== 'object') return false
+    return node.nodeType && node.nodeType === Node.ELEMENT_NODE
+  }
+
+  static isEmptyNode(node: Node) {
+    let text = ''
+    if(
+      DOM.isSingleTag(node as HTMLElement) &&
+      !DOM.isLineBreakTag(node as HTMLElement)
+    ) {
+      return false
+    }
+    if(DOM.isElement(node) && this.isNativeInput(node as HTMLElement)) {
+      text = (node as HTMLInputElement).value
+    } else {
+      text = node.textContent || ''
+    }
+    return text.trim().length === 0
   }
 }
 
