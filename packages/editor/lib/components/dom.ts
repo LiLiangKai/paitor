@@ -51,12 +51,24 @@ class DOM {
     }
   }
 
-  static querySelector<E extends HTMLElement = HTMLElement>(selector: string, parentDom: E) {
-    return (parentDom || document).querySelector<E>(selector)
+  static querySelector<E extends HTMLElement = HTMLElement>(selector: string, parent: E) {
+    return (parent || document).querySelector<E>(selector)
   }
 
-  static append<P extends HTMLElement = HTMLDivElement, E extends HTMLElement = HTMLDivElement>(parent: P, child: E){ 
+  static contains(parent: HTMLElement, child: Node) {
+    return parent.contains(child)
+  }
+
+  static append(parent: HTMLElement, child: HTMLElement){ 
     parent.appendChild(child)
+  }
+
+  static appendBefore(parent: HTMLElement, child: HTMLElement, sibling: HTMLElement) {
+    if (sibling && DOM.contains(parent, sibling)) {
+      parent.insertBefore(child, sibling)
+    } else {
+      parent.append(child)
+    }
   }
 
   static addEventListener(

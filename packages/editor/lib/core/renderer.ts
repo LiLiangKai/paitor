@@ -21,7 +21,8 @@ export default class Renderer {
   mountBlock(block: TBlock) {
     if(this.blockMap.has(block)) return
     const view = new BlockView(block, this.core)
-    this.contentWrap.appendChild(block.element)
+    const sibling = block.nextSibling.element
+    $.appendBefore(this.contentWrap, block.element, sibling)
     view.mount()
     this.blockMap.set(block, view)
   }

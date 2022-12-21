@@ -31,6 +31,11 @@ export default class SelectionTool {
     return selection?.isCollapsed || null
   }
 
+  static getRange() {
+    const selection = SelectionTool.get()
+    return selection && selection.rangeCount ? selection.getRangeAt(0) : null
+  }
+
   static setCursor(element: HTMLElement, offset = 0) {
     const range = document.createRange()
     const selection = SelectionTool.get()

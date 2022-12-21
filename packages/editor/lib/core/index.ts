@@ -2,7 +2,7 @@ import $ from '../components/dom'
 import State from './state'
 import Renderer from './renderer'
 import Plugin from './plugin'
-import type { TCoreOption } from '../types'
+import type { TCoreOption, TBlockMeta } from '../types'
 
 export default class Core {
   readonly option: TCoreOption
@@ -17,7 +17,7 @@ export default class Core {
     this.state = new State(this)
     this.renderer = new Renderer(this)
 
-    this.createBlock(false)
+    this.createBlock({type: 'paragraph'}, '',false)
   }
 
   get editable() {
@@ -39,9 +39,12 @@ export default class Core {
     this.renderer.focusBlock(this.state.blockFocus)
   }
 
-  createBlock(autoFocus: boolean = true) {
+  createBlock(meta: TBlockMeta, prevBlockId?: string, autoFocus: boolean = true) {
     const curFocusBlock = this.state.blockFocus
-    const block = this.state.createBlock({ type: 'paragraph' })
+    const block = this.state.createBlock(
+      Object.assign({type: 'paragraph'}, meta), 
+      prevBlockId
+    )
     this.renderer.mountBlock(block)
     if(autoFocus) {
       if(curFocusBlock) {

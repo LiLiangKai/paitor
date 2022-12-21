@@ -34,7 +34,6 @@ export default class BlockView {
     const node = $.getDeepestNode(this.instance.input)
     const contentLength = $.getContentLength(node)
     delay(() => {
-      console.log(this, contentLength)
       SelectionTool.setCursor(node, contentLength)
     }, 10)()
     $.updateClassName(this.block.element).add(`${prefixCls}-block-active`)
